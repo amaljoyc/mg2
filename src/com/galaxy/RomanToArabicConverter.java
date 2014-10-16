@@ -57,8 +57,7 @@ public class RomanToArabicConverter {
 	public void checkForRepeatableSymbols(Character symbol) {
 		if (repetableSymbolCache.contains(symbol)) {
 			if (repetableSymbolCache.size() == 3) {
-				System.err
-						.println("Only 3 successive repetition allowed for I, X, C and M");
+				System.err.println("Only 3 successive repetition allowed for I, X, C and M");
 				System.exit(0);
 			}
 			repetableSymbolCache.add(symbol);
@@ -68,12 +67,10 @@ public class RomanToArabicConverter {
 		}
 	}
 
-	public void validateSubtraction(Character currentSymbol,
-			Character nextSymbol) {
+	public void validateSubtraction(Character currentSymbol, Character nextSymbol) {
 		List<Character> allowedSymbols = validSubtractionMap.get(currentSymbol);
 		if (!allowedSymbols.contains(nextSymbol)) {
-			System.err.println("Subtraction of " + currentSymbol + " from "
-					+ nextSymbol + " is not allowed");
+			System.err.println("Subtraction of " + currentSymbol + " from " + nextSymbol + " is not allowed");
 			System.exit(0);
 		}
 	}
