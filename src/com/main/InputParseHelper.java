@@ -1,4 +1,4 @@
-package com.galaxy;
+package com.main;
 
 public class InputParseHelper {
 

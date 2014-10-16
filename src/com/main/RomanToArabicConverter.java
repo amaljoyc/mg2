@@ -1,4 +1,4 @@
-package com.galaxy;
+package com.main;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ public class RomanToArabicConverter {
 		}
 	};
 
-	public static int getArabicNumeral(String romanNumeral) {
+	public static int getArabicNumeral(String romanNumeral) throws RomanFormatException {
 		char[] romanArray = romanNumeral.toCharArray();
 		int arabicNumeral = 0;
 		for (int i = 0; i < romanArray.length; i++) {

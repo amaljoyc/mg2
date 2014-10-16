@@ -1,13 +1,13 @@
-package com.galaxy;
+package com.main;
 
-import static com.galaxy.InputParseHelper.ALL_CHAR_MATCH;
-import static com.galaxy.InputParseHelper.CREDITS;
-import static com.galaxy.InputParseHelper.CREDITS_QUEST;
-import static com.galaxy.InputParseHelper.IS;
-import static com.galaxy.InputParseHelper.QUESTION_MARK;
-import static com.galaxy.InputParseHelper.SPACE;
-import static com.galaxy.InputParseHelper.UNIT_QUEST;
-import static com.galaxy.InputParseHelper.WRONG_QUEST_ANS;
+import static com.main.InputParseHelper.ALL_CHAR_MATCH;
+import static com.main.InputParseHelper.CREDITS;
+import static com.main.InputParseHelper.CREDITS_QUEST;
+import static com.main.InputParseHelper.IS;
+import static com.main.InputParseHelper.QUESTION_MARK;
+import static com.main.InputParseHelper.SPACE;
+import static com.main.InputParseHelper.UNIT_QUEST;
+import static com.main.InputParseHelper.WRONG_QUEST_ANS;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +21,7 @@ public class InputParser {
 	private Map<String, Float> metalMap = new HashMap<>();
 	private List<String> answers = new ArrayList<>();
 
-	public List<String> parseInput(List<String> inputs) {
+	public List<String> parseInput(List<String> inputs) throws RomanFormatException {
 		String[] words;
 		for (String s : inputs) {
 			words = s.split(SPACE);
@@ -37,7 +37,7 @@ public class InputParser {
 		return answers;
 	}
 
-	private void parseQuestion(String question) {
+	private void parseQuestion(String question) throws RomanFormatException {
 		StringBuilder romanNumeral = new StringBuilder();
 		StringBuilder answer = new StringBuilder();
 
@@ -70,12 +70,13 @@ public class InputParser {
 				}
 			}
 		} else {
-			answers.add(WRONG_QUEST_ANS);
+			answer.append(WRONG_QUEST_ANS);
 		}
+
 		answers.add(answer.toString());
 	}
 
-	private void parseMetal(String[] words) {
+	private void parseMetal(String[] words) throws RomanFormatException {
 		StringBuilder romanNumeral = new StringBuilder();
 		for (int i = 0; i < words.length; i++) {
 			String romanSymbol = unitMap.get(words[i]);

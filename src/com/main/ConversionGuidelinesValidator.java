@@ -1,4 +1,4 @@
-package com.galaxy;
+package com.main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,23 +41,21 @@ public class ConversionGuidelinesValidator {
 		repeatableSymbolCache.clear();
 	}
 
-	public static void checkForNonRepetableSymbols(Character symbol) {
+	public static void checkForNonRepetableSymbols(Character symbol) throws RomanFormatException {
 		Integer count = nonRepeatableSymbols.get(symbol);
 		if (count != null) {
 			if ((count + 1) == 2) {
-				System.err.println("D, L, and V can never be repeated");
-				System.exit(0);
+				throw new RomanFormatException("D, L and V can never be repeated");
 			} else {
 				nonRepeatableSymbols.put(symbol, 1);
 			}
 		}
 	}
 
-	public static void checkForRepeatableSymbols(Character symbol) {
+	public static void checkForRepeatableSymbols(Character symbol) throws RomanFormatException {
 		if (repeatableSymbolCache.contains(symbol)) {
 			if (repeatableSymbolCache.size() == 3) {
-				System.err.println("Only 3 successive repetition allowed for I, X, C and M");
-				System.exit(0);
+				throw new RomanFormatException("Only 3 successive repetition allowed for I, X, C and M");
 			}
 			repeatableSymbolCache.add(symbol);
 		} else {
@@ -66,11 +64,11 @@ public class ConversionGuidelinesValidator {
 		}
 	}
 
-	public static void validateSubtraction(Character currentSymbol, Character nextSymbol) {
+	public static void validateSubtraction(Character currentSymbol, Character nextSymbol) throws RomanFormatException {
 		List<Character> allowedSymbols = validSubtractionMap.get(currentSymbol);
 		if (!allowedSymbols.contains(nextSymbol)) {
-			System.err.println("Subtraction of " + currentSymbol + " from " + nextSymbol + " is not allowed");
-			System.exit(0);
+			throw new RomanFormatException("Subtraction of " + currentSymbol + " from " + nextSymbol
+					+ " is not allowed");
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package com.galaxy;
+package com.main;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InputReader {
+	public static final String inputFileLocation = "src/resources/input.txt";
+
 	public List<String> fileReader() {
-		String inputFileLocation = "src/resources/input.txt";
 		List<String> inputs = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(inputFileLocation))) {
 			String line = br.readLine();
