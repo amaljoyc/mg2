@@ -9,8 +9,7 @@ public class InputReader {
 	public List<String> fileReader() {
 		String inputFileLocation = "src/resources/input.txt";
 		List<String> inputs = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(
-				inputFileLocation))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(inputFileLocation))) {
 			String line = br.readLine();
 			while (line != null) {
 				inputs.add(line);

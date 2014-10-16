@@ -1,5 +1,14 @@
 package com.galaxy;
 
+import static com.galaxy.InputParseHelper.ALL_CHAR_MATCH;
+import static com.galaxy.InputParseHelper.CREDITS;
+import static com.galaxy.InputParseHelper.CREDITS_QUEST;
+import static com.galaxy.InputParseHelper.IS;
+import static com.galaxy.InputParseHelper.QUESTION_MARK;
+import static com.galaxy.InputParseHelper.SPACE;
+import static com.galaxy.InputParseHelper.UNIT_QUEST;
+import static com.galaxy.InputParseHelper.WRONG_QUEST_ANS;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,73 +16,73 @@ import java.util.List;
 import java.util.Map;
 
 public class InputParser {
-	public static final String QUESTION_MARK = "?";
-	public static final String SPACE = " ";
-	public static final String HOW = "how";
-	public static final String MANY = "many";
-	public static final String MUCH = "much";
-	public static final String CREDITS = "Credits";
-	public static final String IS = "is";
 
-	Map<String, String> unitMap = new HashMap<>();
-	Map<String, Float> metalMap = new HashMap<>();
-	List<String> answers = new ArrayList<>();
+	private Map<String, String> unitMap = new HashMap<>();
+	private Map<String, Float> metalMap = new HashMap<>();
+	private List<String> answers = new ArrayList<>();
 
-	void parseQuestion(String[] words) {
-		RomanToArabicConverter converter = new RomanToArabicConverter();
+	public List<String> parseInput(List<String> inputs) {
+		String[] words;
+		for (String s : inputs) {
+			words = s.split(SPACE);
+			List<String> wordList = Arrays.asList(words);
+			if (wordList.contains(QUESTION_MARK)) {
+				this.parseQuestion(s);
+			} else if (wordList.contains(CREDITS)) {
+				this.parseMetal(words);
+			} else {
+				this.parseUnit(words);
+			}
+		}
+		return answers;
+	}
+
+	private void parseQuestion(String question) {
 		StringBuilder romanNumeral = new StringBuilder();
 		StringBuilder answer = new StringBuilder();
-		boolean isCreditQuery = Arrays.asList(words).contains(HOW) && Arrays.asList(words).contains(MANY)
-				&& Arrays.asList(words).contains(CREDITS) && Arrays.asList(words).contains(IS);
-		boolean isUnitValueQuery = Arrays.asList(words).contains(HOW) && Arrays.asList(words).contains(MUCH)
-				&& Arrays.asList(words).contains(IS);
 
-		if (isCreditQuery) {
+		if (question.matches(CREDITS_QUEST + ALL_CHAR_MATCH)) {
+			String[] part2 = question.split(CREDITS_QUEST);
+			String[] words = part2[1].split(SPACE);
 			for (int i = 0; i < words.length; i++) {
 				String romanSymbol = unitMap.get(words[i]);
 				if (romanSymbol != null) {
-					answer.append(words[i]);
-					answer.append(SPACE);
+					answer.append(words[i]).append(SPACE);
 					romanNumeral.append(romanSymbol);
 				} else if (words[i].equals(QUESTION_MARK)) {
-					float totalValue = converter.getArabicNumeral(romanNumeral.toString()) * metalMap.get(words[i - 1]);
-					answer.append(words[i - 1]);
-					answer.append(SPACE);
-					answer.append(IS);
-					answer.append(SPACE);
-					answer.append((int) totalValue);
-					answer.append(SPACE);
-					answer.append(CREDITS);
+					float arabicNumeral = RomanToArabicConverter.getArabicNumeral(romanNumeral.toString());
+					float totalValue = arabicNumeral * metalMap.get(words[i - 1]);
+					answer.append(words[i - 1]).append(SPACE).append(IS).append(SPACE);
+					answer.append((int) totalValue).append(SPACE).append(CREDITS);
 				}
 			}
-		} else if (isUnitValueQuery) {
+		} else if (question.matches(UNIT_QUEST + ALL_CHAR_MATCH)) {
+			String[] part2 = question.split(UNIT_QUEST);
+			String[] words = part2[1].split(SPACE);
 			for (int i = 0; i < words.length; i++) {
 				String romanSymbol = unitMap.get(words[i]);
 				if (romanSymbol != null) {
-					answer.append(words[i]);
-					answer.append(SPACE);
+					answer.append(words[i]).append(SPACE);
 					romanNumeral.append(romanSymbol);
 				} else if (words[i].equals(QUESTION_MARK)) {
-					answer.append(IS);
-					answer.append(SPACE);
-					answer.append(converter.getArabicNumeral(romanNumeral.toString()));
+					int arabicNumeral = RomanToArabicConverter.getArabicNumeral(romanNumeral.toString());
+					answer.append(IS).append(SPACE).append(arabicNumeral);
 				}
 			}
 		} else {
-			answers.add("I have no idea what you are talking about");
+			answers.add(WRONG_QUEST_ANS);
 		}
 		answers.add(answer.toString());
 	}
 
-	void parseMetal(String[] words) {
-		RomanToArabicConverter converter = new RomanToArabicConverter();
-		StringBuilder sb = new StringBuilder();
+	private void parseMetal(String[] words) {
+		StringBuilder romanNumeral = new StringBuilder();
 		for (int i = 0; i < words.length; i++) {
 			String romanSymbol = unitMap.get(words[i]);
 			if (romanSymbol != null) {
-				sb.append(romanSymbol);
+				romanNumeral.append(romanSymbol);
 			} else {
-				float unitValue = converter.getArabicNumeral(sb.toString());
+				float unitValue = RomanToArabicConverter.getArabicNumeral(romanNumeral.toString());
 				float credits = Integer.parseInt(words[i + 2]);
 				metalMap.put(words[i], credits / unitValue);
 				break;
@@ -81,32 +90,7 @@ public class InputParser {
 		}
 	}
 
-	void parseUnit(String[] words) {
+	private void parseUnit(String[] words) {
 		unitMap.put(words[0], words[2]);
-	}
-
-	public static void main(String[] args) {
-		InputParser parser = new InputParser();
-		InputReader reader = new InputReader();
-		List<String> inputs = reader.fileReader();
-		String[] words;
-
-		for (String s : inputs) {
-			words = s.split(SPACE);
-			List<String> wordList = Arrays.asList(words);
-			if (wordList.contains(QUESTION_MARK)) {
-				parser.parseQuestion(words);
-			} else if (wordList.contains(CREDITS)) {
-				parser.parseMetal(words);
-			} else {
-				parser.parseUnit(words);
-			}
-		}
-
-		System.out.println(parser.unitMap);
-		System.out.println(parser.metalMap);
-		for (String s : parser.answers) {
-			System.out.println(s);
-		}
 	}
 }
