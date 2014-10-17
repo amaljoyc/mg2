@@ -22,12 +22,11 @@ public class InputParser {
 	private List<String> answers = new ArrayList<>();
 
 	public List<String> parseInput(List<String> inputs) throws RomanFormatException {
-		String[] words;
-		for (String s : inputs) {
-			words = s.split(SPACE);
+		for (String input : inputs) {
+			String[] words = input.split(SPACE);
 			List<String> wordList = Arrays.asList(words);
 			if (wordList.contains(QUESTION_MARK)) {
-				this.parseQuestion(s);
+				this.parseQuestion(input);
 			} else if (wordList.contains(CREDITS)) {
 				this.parseMetal(words);
 			} else {
@@ -42,8 +41,8 @@ public class InputParser {
 		StringBuilder answer = new StringBuilder();
 
 		if (question.matches(CREDITS_QUEST + ALL_CHAR_MATCH)) {
-			String[] part2 = question.split(CREDITS_QUEST);
-			String[] words = part2[1].split(SPACE);
+			String[] secondPart = question.split(CREDITS_QUEST);
+			String[] words = secondPart[1].split(SPACE);
 			for (int i = 0; i < words.length; i++) {
 				String romanSymbol = unitMap.get(words[i]);
 				if (romanSymbol != null) {
@@ -57,8 +56,8 @@ public class InputParser {
 				}
 			}
 		} else if (question.matches(UNIT_QUEST + ALL_CHAR_MATCH)) {
-			String[] part2 = question.split(UNIT_QUEST);
-			String[] words = part2[1].split(SPACE);
+			String[] secondPart = question.split(UNIT_QUEST);
+			String[] words = secondPart[1].split(SPACE);
 			for (int i = 0; i < words.length; i++) {
 				String romanSymbol = unitMap.get(words[i]);
 				if (romanSymbol != null) {

@@ -59,7 +59,7 @@ public class ConversionGuidelinesValidator {
 			}
 			repeatableSymbolCache.add(symbol);
 		} else {
-			repeatableSymbolCache.clear();
+			clearRepeatableSymbolCache();
 			repeatableSymbolCache.add(symbol);
 		}
 	}

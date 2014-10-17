@@ -11,8 +11,8 @@ public class Main {
 
 		try {
 			List<String> outputs = parser.parseInput(inputs);
-			for (String s : outputs) {
-				System.out.println(s);
+			for (String output : outputs) {
+				System.out.println(output);
 			}
 		} catch (RomanFormatException e) {
 			System.err.println(e.getMessage());
